@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Top Down Spaceship"
+config/name="The Last Stand"
 run/main_scene="res://src/UI/TitleScreen.tscn"
 config/icon="res://icon.png"
 
