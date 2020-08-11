@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 onready var speed = 50
-onready var max_speed = 400
+onready var max_speed = 450
 onready var bullet_speed = 1500
 onready var fire_rate = 0.2
 onready var hp = 50
@@ -28,19 +28,16 @@ func _process(delta):
 func _physics_process(_delta: float) -> void:
 	if is_dead:
 		return
+	var _direction = Vector2.ZERO
 	if Input.is_action_pressed("left"):
-		_motion.x -= speed
-		_motion.x = max(_motion.x,-max_speed)
+		_direction.x -= 1
 	if Input.is_action_pressed("right"):
-		_motion.x += speed
-		_motion.x = min(_motion.x,max_speed)
+		_direction.x += 1
 	if Input.is_action_pressed("up"):
-		_motion.y -= speed
-		_motion.y = max(_motion.y,-max_speed)
+		_direction.y -= 1
 	if Input.is_action_pressed("down"):
-		_motion.y += speed
-		_motion.y = min(_motion.y,max_speed)
-	_motion = move_and_slide(_motion)
+		_direction.y += 1
+	_motion = move_and_slide(_direction.normalized()*max_speed)
 
 	
 func shoot(_fire_rate):

@@ -72,7 +72,6 @@ position = Vector2( -110.079, 0 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "defaul"
-frame = 1
 playing = true
 
 [node name="Body" type="Sprite" parent="."]
