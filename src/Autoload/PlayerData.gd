@@ -1,7 +1,7 @@
 extends Node
 
-onready var score:int = 0 setget set_score,get_score
-onready var lifes = 3
+@onready var score:int = 0: get = get_score, set = set_score
+@onready var lifes = 3
 
 signal score_change(score)
 

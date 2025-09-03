@@ -1,13 +1,13 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
-export var hp = 1
+@export var hp = 1
 var inmune = false
 
 #export var speed = 900
-export var speed = 500
+@export var speed = 500
 
-onready var player = get_parent().get_node("Player")
-onready var spawner = get_parent().get_node("EnemySpawner")
+@onready var player = get_parent().get_node("Player")
+@onready var spawner = get_parent().get_node("EnemySpawner")
 
 
 signal dead()
@@ -15,8 +15,8 @@ signal dead()
 signal hp_count(hp)
 
 func _ready() -> void:
-	connect("dead",spawner,"_on_Enemy_2_dead")
-	connect("dead",PlayerData,"_on_Enemy_2_dead")
+	connect("dead", Callable(spawner, "_on_Enemy_2_dead"))
+	connect("dead", Callable(PlayerData, "_on_Enemy_2_dead"))
 	$AnimationPlayer.play("idle")
 	emit_signal("hp_count",hp)
 	speed = max(randf(),0.8)*speed
@@ -36,17 +36,17 @@ func hit(dmg)->void:
 			die()
 			return
 		$AnimationPlayer.play("hit")
-		yield($AnimationPlayer,"animation_finished")
+		await $AnimationPlayer.animation_finished
 		inmune = false
 		
 func die():
 	emit_signal("dead")
 	speed = 0
-	$Sprite/AnimatedSprite.visible = false
-	$Sprite/AnimatedSprite2.visible = false
+	$Sprite2D/AnimatedSprite2D.visible = false
+	$Sprite2D/AnimatedSprite2.visible = false
 	$AnimationPlayer.play("die")
 	$AudioStreamPlayer2D.play()
-	yield($AnimationPlayer,"animation_finished")
+	await $AnimationPlayer.animation_finished
 	queue_free()
 
 

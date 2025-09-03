@@ -1,17 +1,17 @@
 extends Node
 
-onready var timer = get_node("Timer")
-onready var	spawnable_scene = preload("res://src/Enemies/Enemy_1.tscn")
-onready var	spawnable_scene_2 = preload("res://src/Enemies/Enemy_2.tscn")
-onready var	spawnable_scene_3 = preload("res://src/Enemies/Enemy_3.tscn")
-onready var	player
-onready var has_boss = false
+@onready var timer = get_node("Timer")
+@onready var	spawnable_scene = preload("res://src/Enemies/Enemy_1.tscn")
+@onready var	spawnable_scene_2 = preload("res://src/Enemies/Enemy_2.tscn")
+@onready var	spawnable_scene_3 = preload("res://src/Enemies/Enemy_3.tscn")
+@onready var	player
+@onready var has_boss = false
 
-onready var current_score = 0
-onready var current_spawn = 0
-export var max_spawnable = 10
-export var respawn_time = 0.5
-export var spawn_distance = 500
+@onready var current_score = 0
+@onready var current_spawn = 0
+@export var max_spawnable = 10
+@export var respawn_time = 0.5
+@export var spawn_distance = 500
 var position = Vector2.ZERO
 
 func _process(_delta):
@@ -39,7 +39,7 @@ func spawn(ship_type:int)-> void:
 		return
 	#calculate distances	
 	randomize()
-	var angle = rand_range(0,2*PI)
+	var angle = randf_range(0,2*PI)
 	var new_position = Vector2(cos(angle),sin(angle))*spawn_distance
 	var player_position = player.get_global_position()
 	#spawn
@@ -47,13 +47,13 @@ func spawn(ship_type:int)-> void:
 	match ship_type:
 		0,1,2,3,4:
 			#print("instance 1")
-			spawnable_scene_instance = spawnable_scene.instance()
+			spawnable_scene_instance = spawnable_scene.instantiate()
 		5,6,7,8:
 			#print("instance 2")
-			spawnable_scene_instance = spawnable_scene_2.instance()
+			spawnable_scene_instance = spawnable_scene_2.instantiate()
 		9:
 			#print("instance 3")
-			spawnable_scene_instance = spawnable_scene_3.instance()
+			spawnable_scene_instance = spawnable_scene_3.instantiate()
 			has_boss = true
 			
 	spawnable_scene_instance.set_position(player_position + new_position)

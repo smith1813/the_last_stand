@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-export var projectile_dmg = 1
+@export var projectile_dmg = 1
 
 
 func _ready() -> void:
@@ -14,9 +14,8 @@ func _on_screen_exited() -> void:
 
 func _on_body_entered(_body: Node) -> void:
 	_body.hit(projectile_dmg)
-	#TODO revisar este error
 	get_node(".").sleeping = true
 	$AnimationPlayer.play("explode")
 	$AudioStreamPlayer2D.play()
-	yield($AnimationPlayer,"animation_finished")
+	await $AnimationPlayer.animation_finished
 	queue_free()

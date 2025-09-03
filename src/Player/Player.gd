@@ -1,10 +1,10 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
-onready var speed = 50
-onready var max_speed = 450
-onready var bullet_speed = 1500
-onready var fire_rate = 0.2
-onready var hp = 50
+@onready var speed = 50
+@onready var max_speed = 450
+@onready var bullet_speed = 1500
+@onready var fire_rate = 0.2
+@onready var hp = 50
 
 var _motion = Vector2.ZERO
 var can_fire = true
@@ -37,22 +37,24 @@ func _physics_process(_delta: float) -> void:
 		_direction.y -= 1
 	if Input.is_action_pressed("down"):
 		_direction.y += 1
-	_motion = move_and_slide(_direction.normalized()*max_speed)
+	set_velocity(_direction.normalized()*max_speed)
+	move_and_slide()
+	_motion = velocity
 
 	
 func shoot(_fire_rate):
-	var bullet_instance_1 = bullet.instance()
-	var bullet_instance_2 = bullet.instance()
+	var bullet_instance_1 = bullet.instantiate()
+	var bullet_instance_2 = bullet.instantiate()
 	bullet_instance_1.position = $BulletPoint.get_global_position()
 	bullet_instance_2.position = $BulletPoint2.get_global_position()
 	bullet_instance_1.rotation_degrees = rotation_degrees
 	bullet_instance_2.rotation_degrees = rotation_degrees
-	bullet_instance_1.apply_impulse(Vector2(),Vector2(bullet_speed,0).rotated(rotation))
-	bullet_instance_2.apply_impulse(Vector2(),Vector2(bullet_speed,0).rotated(rotation))
+	bullet_instance_1.apply_impulse(Vector2(bullet_speed,0).rotated(rotation), Vector2())
+	bullet_instance_2.apply_impulse(Vector2(bullet_speed,0).rotated(rotation), Vector2())
 	get_tree().get_root().add_child(bullet_instance_1)
 	get_tree().get_root().add_child(bullet_instance_2)
 	can_fire = false
-	yield(get_tree().create_timer(_fire_rate), "timeout")
+	await get_tree().create_timer(_fire_rate).timeout
 	can_fire = true
 
 func _on_body_entered(body: Node) -> void:
@@ -62,9 +64,12 @@ func die() -> void:
 	is_dead = true
 	$Fire.visible = false
 	$AnimationPlayer.play("Die")
-	yield($AnimationPlayer,"animation_finished")
-	get_tree().change_scene("res://src/Levels/GameOver.tscn")
-	queue_free()
+	
+	await $AnimationPlayer.animation_finished
+
+	var tree = Engine.get_main_loop() as SceneTree
+	if tree:
+		tree.change_scene_to_file("res://src/Levels/GameOver.tscn")
 	
 func hit():
 	pass

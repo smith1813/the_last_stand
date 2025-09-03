@@ -1,13 +1,13 @@
 extends Control
 
-onready var scene_tree: = get_tree()
-onready var paused_overlay: ColorRect = get_node("PauseOverlay")
-onready var score_label: Label = get_node("ScoreLabel")
+@onready var scene_tree: = get_tree()
+@onready var paused_overlay: ColorRect = get_node("PauseOverlay")
+@onready var score_label: Label = get_node("ScoreLabel")
 
-var paused: = false setget set_paused
+var paused: = false: set = set_paused
 
 func _ready() -> void:
-	PlayerData.connect("score_change",self,"_on_score_update")
+	PlayerData.connect("score_change", Callable(self, "_on_score_update"))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
